@@ -18,13 +18,43 @@ describe('todos reducer', () => {
     expect(
       todos([], {
         type: types.ADD_TODO,
-        text: 'Run the tests'
+        todo: {
+          text: 'Run the tests',
+          completed: false,
+          id: '12345-67789-86794',
+        }
       })
     ).toEqual([
       {
         text: 'Run the tests',
         completed: false,
-        id: 0
+        id: '12345-67789-86794'
+      }
+    ])
+
+    expect(
+      todos([{
+        text: 'Run the tests',
+        completed: false,
+        id: '12345-67789-86794'
+      }], {
+        type: types.ADD_TODO,
+        todo: {
+          text: 'Use Redux',
+          completed: false,
+          id: '45345-76767-test',
+        }
+      })
+    ).toEqual([
+      {
+        text: 'Use Redux',
+        completed: false,
+        id: '45345-76767-test'
+      },
+      {
+        text: 'Run the tests',
+        completed: false,
+        id: '12345-67789-86794'
       }
     ])
 
@@ -33,52 +63,34 @@ describe('todos reducer', () => {
         {
           text: 'Use Redux',
           completed: false,
-          id: 0
-        }
-      ], {
-        type: types.ADD_TODO,
-        text: 'Run the tests'
-      })
-    ).toEqual([
-      {
-        text: 'Run the tests',
-        completed: false,
-        id: 1
-      }, {
-        text: 'Use Redux',
-        completed: false,
-        id: 0
-      }
-    ])
-
-    expect(
-      todos([
+          id: '45345-76767-test'
+        },
         {
           text: 'Run the tests',
           completed: false,
-          id: 1
-        }, {
-          text: 'Use Redux',
-          completed: false,
-          id: 0
+          id: '12345-67789-86794'
         }
       ], {
         type: types.ADD_TODO,
-        text: 'Fix the tests'
+        todo: {
+          text: 'Fix the tests',
+          completed: false,
+          id: '634-2345-test123',
+        }
       })
     ).toEqual([
       {
         text: 'Fix the tests',
         completed: false,
-        id: 2
-      }, {
-        text: 'Run the tests',
-        completed: false,
-        id: 1
+        id: '634-2345-test123'
       }, {
         text: 'Use Redux',
         completed: false,
-        id: 0
+        id: '45345-76767-test'
+      }, {
+        text: 'Run the tests',
+        completed: false,
+        id: '12345-67789-86794'
       }
     ])
   })
@@ -242,42 +254,6 @@ describe('todos reducer', () => {
         text: 'Use Redux',
         completed: false,
         id: 0
-      }
-    ])
-  })
-
-  it('should not generate duplicate ids after CLEAR_COMPLETED', () => {
-    expect(
-      [
-        {
-          type: types.COMPLETE_TODO,
-          id: 0
-        }, {
-          type: types.CLEAR_COMPLETED
-        }, {
-          type: types.ADD_TODO,
-          text: 'Write more tests'
-        }
-      ].reduce(todos, [
-        {
-          id: 0,
-          completed: false,
-          text: 'Use Redux'
-        }, {
-          id: 1,
-          completed: false,
-          text: 'Write tests'
-        }
-      ])
-    ).toEqual([
-      {
-        text: 'Write more tests',
-        completed: false,
-        id: 2
-      }, {
-        text: 'Write tests',
-        completed: false,
-        id: 1
       }
     ])
   })
