@@ -2419,13 +2419,9 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
-graceful-fs@4.1.10:
+graceful-fs@4.1.10, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
   version "4.1.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.10.tgz#f2d720c22092f743228775c75e3612632501f131"
-
-graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
-  version "4.1.11"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
 "graceful-readlink@>= 1.0.0":
   version "1.0.1"
@@ -5433,8 +5429,9 @@ watchpack@^0.2.1:
     chokidar "^1.0.0"
     graceful-fs "^4.1.2"
 
-"waterwheel@file:///Users/infiniteluke/code/node/waterwheel":
+"waterwheel@file:///Users/infiniteluke/code/node/waterwheel", "waterwheel@github:infiniteluke/waterwheel#jsonapi-delete":
   version "1.2.0"
+  resolved "https://codeload.github.com/infiniteluke/waterwheel/tar.gz/0121ee77d590753c27626f237fceb6d822170054"
   dependencies:
     axios "0.13.1"
     qs "6.2.1"

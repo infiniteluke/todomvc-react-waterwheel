@@ -19,7 +19,7 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "todomvc-app-css": "^2.0.6",
-    "waterwheel": "file:///Users/infiniteluke/code/node/waterwheel"
+    "waterwheel": "github:infiniteluke/waterwheel#jsonapi-delete"
   },
   "scripts": {
     "start": "react-scripts start",
