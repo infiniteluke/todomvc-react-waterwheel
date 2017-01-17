@@ -1,3 +1,5 @@
 {
-  "apiURL": "http://master-7rqtwti-jh5q3lortcsym.us.platform.sh"
+  "apiURL": "http://master-7rqtwti-jh5q3lortcsym.us.platform.sh",
+  "client_id": "35d332db-7a1f-4561-bc35-0677d4668f01",
+  "client_secret": "abc123"
 }
