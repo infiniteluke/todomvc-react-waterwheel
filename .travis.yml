@@ -3,8 +3,3 @@ node_js: 6
 install: npm i
 script:
 - npm run test
-deploy:
-  provider: script
-  script: npm run deploy
-  on:
-    branch: master

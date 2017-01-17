@@ -87,7 +87,7 @@ export const completeAll = () => (dispatch, getState) => {
           'attributes': { 'field_completed': Number(!completed) },
         }
       })
-    ), { concurrency: 3 })
+    ), { concurrency: 2 })
   .then(res => {
     dispatch({ type: types.COMPLETE_ALL })
     dispatch({
@@ -109,7 +109,7 @@ export const clearCompleted = () => (dispatch, getState) => {
 
   return Promise.map(todos, ({id}) => (
       window.waterwheel.jsonapi.delete(`node/todo`, id)
-    ), { concurrency: 3 })
+    ), { concurrency: 2 })
   .then(res => {
     dispatch({ type: types.CLEAR_COMPLETED })
     dispatch({
