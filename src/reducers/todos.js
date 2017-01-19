@@ -1,4 +1,4 @@
-import { ADD_TODO, DELETE_TODO, EDIT_TODO, COMPLETE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
+import { ADD_TODO, DELETE_TODO, EDIT_TODO, COMPLETE_TODO, LIKE_TODO, UNLIKE_TODO, COMPLETE_ALL, CLEAR_COMPLETED } from '../constants/ActionTypes'
 
 const initialState = [
   {
@@ -34,6 +34,21 @@ export default function todos(state = initialState, action) {
           { ...todo, completed: !todo.completed } :
           todo
       )
+
+    case LIKE_TODO:
+      return state.map(todo =>
+        todo.id === action.todoId ?
+          { ...todo, userLiked: action.userLiked, likes: [...todo.likes, { id: action.id, userId: action.userLiked }]  } :
+          todo
+      )
+
+      case UNLIKE_TODO:
+        return state.map(todo => {
+          const likeIndex = todo.likes.findIndex(like => like.id === action.id)
+          return todo.id === action.todoId ?
+            { ...todo, userLiked: '', likes: todo.likes.slice(0,likeIndex).concat(todo.likes.slice(likeIndex+1)) } :
+            todo
+        })
 
     case COMPLETE_ALL:
       const areAllMarked = state.every(todo => todo.completed)

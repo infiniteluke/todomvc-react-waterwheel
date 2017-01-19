@@ -18,16 +18,40 @@ export default class Login extends React.Component {
       username: username.value,
       password: password.value,
     })
-    // Get all todo's here and user object here
     window.waterwheel.jsonapi.get('node/todo', { sort: '-changed'})
+      .then(res => Promise.all([
+        Promise.resolve(res),
+        window.waterwheel.jsonapi.get('node/likes', {}),
+        window.waterwheel.jsonapi.get('user/user', {
+          filter: {
+            condition: {
+              path: 'name',
+              value: username.value
+            }
+          }
+        })
+      ]))
       .then(res => {
-        const todos = Array.isArray(res.data) ? res.data : Array(res.data)
+        const todos = res[0].data
+        const likes = res[1].data
+        const user = res[2].data[0]
+        todos.forEach(todo => {
+          todo.attributes.likes = likes
+            .filter(like => like.relationships.field_todo.data && like.relationships.field_todo.data.id === todo.id)
+            .map(like => ({
+              id: like.attributes.uuid,
+              userId: like.relationships.uid.data.id,
+            }))
+          todo.attributes.userLiked = todo.attributes.likes.some(like => user.attributes.uuid === like.userId) ? user.attributes.uuid : ''
+        })
         window.initialTodos = todos.map(normalizeData)
+        window.user = user;
         this.setState({ redirect: true })
       })
       .catch((e) => {
         const message =  e.response ? e.response.data.message : e.message;
         this.setState({ message })
+        return Promise.reject(e)
       })
   }
 

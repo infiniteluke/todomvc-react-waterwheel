@@ -122,3 +122,40 @@ export const clearCompleted = () => (dispatch, getState) => {
     message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
   }))
 }
+
+export const likeTodo = (id) => (dispatch, getState) => {
+  const todo = getState().todos.filter(todo => todo.id === id)[0]
+  const like = todo.likes.find(like => like.userId === todo.userLiked)
+  if (!todo.userLiked) {
+    return window.waterwheel.jsonapi.post('node/likes', {
+      data: {
+        'attributes': { 'title': `Like for ${todo.id}` },
+        'relationships': { 'field_todo': { data: { id, type: 'node--todo' } } }
+      }
+    })
+    .then(res => {
+      dispatch({ type: types.LIKE_TODO, todoId: todo.id, id: res.data.id, userLiked: res.data.relationships.uid.data.id });
+      dispatch({
+        type: types.MESSAGE,
+        message: { text: 'Todo liked succesfully.', type: 'info' }
+      })
+    })
+    .catch(e => dispatch({
+      type: types.MESSAGE,
+      message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
+    }))
+  } else {
+    return window.waterwheel.jsonapi.delete('node/likes', like.id)
+    .then(res => {
+      dispatch({ type: types.UNLIKE_TODO, todoId: id, id: like.id });
+      dispatch({
+        type: types.MESSAGE,
+        message: { text: 'Todo like removed succesfully.', type: 'info' }
+      })
+    })
+    .catch(e => dispatch({
+      type: types.MESSAGE,
+      message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
+    }))
+  }
+}
