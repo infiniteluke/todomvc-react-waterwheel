@@ -1,10 +1,10 @@
 import React from 'react'
 import Redirect from 'react-router/Redirect'
-import normalizeData from '../lib/normalizeData';
+import getInitialData from '../lib/getInitialData';
 
 export default class Login extends React.Component {
   state = {
-    redirect: false
+    redirect: localStorage.getItem('tokenExpireTime') > new Date().getTime()
   }
   
   handleChange = (e) => {
@@ -18,34 +18,8 @@ export default class Login extends React.Component {
       username: username.value,
       password: password.value,
     })
-    window.waterwheel.jsonapi.get('node/todo', { sort: '-changed'})
-      .then(res => Promise.all([
-        Promise.resolve(res),
-        window.waterwheel.jsonapi.get('node/likes', {}),
-        window.waterwheel.jsonapi.get('user/user', {
-          filter: {
-            condition: {
-              path: 'name',
-              value: username.value
-            }
-          }
-        })
-      ]))
-      .then(res => {
-        const todos = res[0].data
-        const likes = res[1].data
-        const user = res[2].data[0]
-        todos.forEach(todo => {
-          todo.attributes.likes = likes
-            .filter(like => like.relationships.field_todo.data && like.relationships.field_todo.data.id === todo.id)
-            .map(like => ({
-              id: like.attributes.uuid,
-              userId: like.relationships.uid.data.id,
-            }))
-          todo.attributes.userLiked = todo.attributes.likes.some(like => user.attributes.uuid === like.userId) ? user.attributes.uuid : ''
-        })
-        window.initialTodos = todos.map(normalizeData)
-        window.user = user;
+    getInitialData(username.value)
+      .then(() => {
         this.setState({ redirect: true })
       })
       .catch((e) => {
@@ -64,7 +38,7 @@ export default class Login extends React.Component {
         {(
           <div>
             <div className='welcomeText'>
-              {window.waterwheel.oauth.tokenInformation.access_token ? (
+              {localStorage.getItem('tokenExpireTime') > new Date().getTime() ? (
                 ''
               ) : (
                 <p>Please login with your 4k Waterwheel Training credentials.</p>
