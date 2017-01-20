@@ -1,6 +1,6 @@
 import normalizeData from './normalizeData';
 
-export default (username) => {
+export default (uid) => {
   return window.waterwheel.jsonapi.get('node/todo', { sort: '-changed'})
   .then(res => Promise.all([
     Promise.resolve(res),
@@ -8,8 +8,8 @@ export default (username) => {
     window.waterwheel.jsonapi.get('user/user', {
       filter: {
         condition: {
-          path: 'name',
-          value: username
+          path: 'uid',
+          value: uid
         }
       }
     })
@@ -29,10 +29,10 @@ export default (username) => {
     })
     window.initialTodos = todos.map(normalizeData)
     window.user = user.attributes;
-    delete window.waterwheel.oauth.tokenInformation.password
-    localStorage.setItem('tokenExpireTime', window.waterwheel.oauth.tokenExpireTime);
-    localStorage.setItem('tokenInformation', JSON.stringify(window.waterwheel.oauth.tokenInformation));
-    localStorage.setItem('user', JSON.stringify(user.attributes));
+    // delete window.waterwheel.oauth.tokenInformation.password
+    // localStorage.setItem('tokenExpireTime', window.waterwheel.oauth.tokenExpireTime);
+    // localStorage.setItem('tokenInformation', JSON.stringify(window.waterwheel.oauth.tokenInformation));
+    // localStorage.setItem('user', JSON.stringify(user.attributes));
     
   })
 }
