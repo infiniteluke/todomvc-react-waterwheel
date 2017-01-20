@@ -28,11 +28,11 @@ export default (username) => {
       todo.attributes.userLiked = todo.attributes.likes.some(like => user.attributes.uuid === like.userId) ? user.attributes.uuid : ''
     })
     window.initialTodos = todos.map(normalizeData)
-    window.username = user.attributes.name;
-    localStorage.setItem('tokenExpireTime', window.waterwheel.oauth.tokenExpireTime);
+    window.user = user.attributes;
     delete window.waterwheel.oauth.tokenInformation.password
+    localStorage.setItem('tokenExpireTime', window.waterwheel.oauth.tokenExpireTime);
     localStorage.setItem('tokenInformation', JSON.stringify(window.waterwheel.oauth.tokenInformation));
-    localStorage.setItem('username', user.attributes.name);
+    localStorage.setItem('user', JSON.stringify(user.attributes));
     
   })
 }

@@ -22,7 +22,7 @@ window.waterwheel = new window.Waterwheel({
   }
 })
 
-window.username = localStorage.getItem('username')
+window.user = JSON.parse(localStorage.getItem('user'))
 window.waterwheel.oauth.tokenInformation = JSON.parse(localStorage.getItem('tokenInformation')) || window.waterwheel.oauth.tokenInformation;
 
 export const MatchWhenAuthorized = ({ component: Component, ...rest }) => (
