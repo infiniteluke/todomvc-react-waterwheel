@@ -88,6 +88,7 @@
 .todo-list .like .likeTodo {
   display: inline-block;
 }
+
 .loader,
 .loader:before,
 .loader:after {

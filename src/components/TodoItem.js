@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import classnames from 'classnames'
 import TodoTextInput from './TodoTextInput'
+import LikeButton from './LikeButton'
 
 export default class TodoItem extends Component {
   static propTypes = {
@@ -48,16 +49,12 @@ export default class TodoItem extends Component {
           <label onDoubleClick={this.handleDoubleClick}>
             {todo.text}
           </label>
-          <div className="like">
-            <div className={classnames({
-              numLikes: true,
-              userLiked: todo.userLiked,
-            })}>
-              {todo.likes.length}
-            </div>            
-            <button className="likeTodo"
-                  onClick={() => likeTodo(todo.id)} >👍🏾</button>
-          </div>
+          <LikeButton
+            numLikes={todo.likes.length}
+            userLiked={Boolean(todo.userLiked)}
+            id={todo.id}
+            handleClick={likeTodo}
+          />
           <button className="destroy"
                   onClick={() => deleteTodo(todo.id)} />
         </div>
