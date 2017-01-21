@@ -1,6 +1,22 @@
 import * as types from '../constants/ActionTypes'
 import normalizeData from '../lib/normalizeData';
+import { MSG_TIMEOUT } from '../constants/Misc'
 import Promise from 'bluebird';
+import { showMessages } from '../config'
+
+let timeout;
+export const showMessage = (text, type, dispatch) => {
+  if (showMessages) {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    dispatch({
+      type: types.SHOW_MESSAGE,
+      message: { text, type },
+    })
+    timeout = setTimeout(() => dispatch({type: types.HIDE_MESSAGE}), MSG_TIMEOUT);
+  }
+}
 
 export const addTodo = text => (dispatch, getState) => {
   return window.waterwheel.jsonapi.post('node/todo', {
@@ -8,30 +24,26 @@ export const addTodo = text => (dispatch, getState) => {
   })
   .then(res => {
     dispatch({ type: types.ADD_TODO, todo: normalizeData(res.data) });
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'Todo saved succesfully.', type: 'info' }
-    })
+    showMessage('Todo saved succesfully.', 'success', dispatch);
   })
-  .catch(e => dispatch({
-    type: types.MESSAGE,
-    message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-  }))
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const deleteTodo = id => (dispatch, getState) => {
   return window.waterwheel.jsonapi.delete('node/todo', id)
   .then(res => {
     dispatch ({ type: types.DELETE_TODO, id });
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'Todo deleted succesfully.', type: 'info' }
-    })
+    showMessage('Todo deleted succesfully.', 'success', dispatch);
   })
-  .catch(e => dispatch({
-    type: types.MESSAGE,
-    message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-  }))
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const editTodo = (id, text) => (dispatch, getState) => {
@@ -44,15 +56,13 @@ export const editTodo = (id, text) => (dispatch, getState) => {
   .then(res => {
     const { id, text } = normalizeData(res.data);
     dispatch({ type: types.EDIT_TODO, id, text });
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'Todo editted succesfully.', type: 'info' }
-    })
+    showMessage('Todo edited succesfully.', 'success', dispatch);
   })
-  .catch(e => dispatch({
-    type: types.MESSAGE,
-    message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-  }))
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const completeTodo = (id, text) => (dispatch, getState) => {
@@ -65,15 +75,13 @@ export const completeTodo = (id, text) => (dispatch, getState) => {
   })
   .then(res => {
     dispatch({ type: types.COMPLETE_TODO, id })
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'Todo marked completed succesfully.', type: 'info' }
-    })
+    showMessage('Todo marked completed succesfully.', 'success', dispatch);
   })
-  .catch(e => dispatch({
-    type: types.MESSAGE,
-    message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-  }))
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const completeAll = () => (dispatch, getState) => {
@@ -90,18 +98,13 @@ export const completeAll = () => (dispatch, getState) => {
     ), { concurrency: 2 })
   .then(res => {
     dispatch({ type: types.COMPLETE_ALL })
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'All todos marked completed succesfully.', type: 'info' }
-    })
+    showMessage('All todos marked completed succesfully.', 'success', dispatch);
   })
-  .catch(e => {
-    console.log(e);
-    return dispatch({
-      type: types.MESSAGE,
-      message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-    })
-  })
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const clearCompleted = () => (dispatch, getState) => {
@@ -112,15 +115,13 @@ export const clearCompleted = () => (dispatch, getState) => {
     ), { concurrency: 2 })
   .then(res => {
     dispatch({ type: types.CLEAR_COMPLETED })
-    dispatch({
-      type: types.MESSAGE,
-      message: { text: 'All completed todos deleted succesfully.', type: 'info' }
-    })
+    showMessage('All completed todos deleted succesfully.', 'success', dispatch);
   })
-  .catch(e => dispatch({
-    type: types.MESSAGE,
-    message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-  }))
+  .catch(e => showMessage(
+    e.response ? e.response.data.message : e.message,
+    'error',
+    dispatch
+  ))
 }
 
 export const likeTodo = (id) => (dispatch, getState) => {
@@ -135,27 +136,23 @@ export const likeTodo = (id) => (dispatch, getState) => {
     })
     .then(res => {
       dispatch({ type: types.LIKE_TODO, todoId: todo.id, id: res.data.id, userLiked: res.data.relationships.uid.data.id });
-      dispatch({
-        type: types.MESSAGE,
-        message: { text: 'Todo liked succesfully.', type: 'info' }
-      })
+      showMessage('Todo liked succesfully', 'success', dispatch);
     })
-    .catch(e => dispatch({
-      type: types.MESSAGE,
-      message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-    }))
+    .catch(e => showMessage(
+      e.response ? e.response.data.message : e.message,
+      'error',
+      dispatch
+    ))
   } else {
     return window.waterwheel.jsonapi.delete('node/likes', like.id)
     .then(res => {
       dispatch({ type: types.UNLIKE_TODO, todoId: id, id: like.id });
-      dispatch({
-        type: types.MESSAGE,
-        message: { text: 'Todo like removed succesfully.', type: 'info' }
-      })
+      showMessage('Todo like removed succesfully.', 'success', dispatch);
     })
-    .catch(e => dispatch({
-      type: types.MESSAGE,
-      message: { text: e.response ? e.response.data.message : e.message, type: 'error' }
-    }))
+    .catch(e => showMessage(
+      e.response ? e.response.data.message : e.message,
+      'error',
+      dispatch
+    ))
   }
 }

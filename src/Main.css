@@ -151,3 +151,27 @@
     height: 5em;
   }
 }
+
+.message {
+  position: fixed;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+  width: 100%;
+  right: 0;
+  padding: 15px;
+  height: 30px;
+  background: #0E536E;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+.message.showMessage {
+  opacity: 1;
+}
+
+.message.error {
+  background: red;
+}

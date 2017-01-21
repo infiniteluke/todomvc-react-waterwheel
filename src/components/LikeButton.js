@@ -20,7 +20,7 @@ export default class LikeButton extends Component {
           {numLikes}
         </div>            
         <button className="likeTodo"
-            onClick={() => handleClick(id)} >👍🏾</button>
+          onClick={() => handleClick(id)} >👍🏾</button>
       </div>
     )
   }

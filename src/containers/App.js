@@ -3,12 +3,14 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Header from '../components/Header'
 import MainSection from '../components/MainSection'
+import Message from '../components/Message'
 import * as TodoActions from '../actions'
 
-const App = ({todos, actions}) => (
+const App = ({todos, actions, message}) => (
   <div>
     <Header addTodo={actions.addTodo} />
     <MainSection todos={todos} actions={actions} />
+    <Message  {...message} />
   </div>
 )
 
@@ -18,7 +20,8 @@ App.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  todos: state.todos
+  todos: state.todos,
+  message: state.message,
 })
 
 const mapDispatchToProps = dispatch => ({
