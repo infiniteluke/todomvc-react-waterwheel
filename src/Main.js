@@ -22,12 +22,9 @@ window.waterwheel = new window.Waterwheel({
   }
 })
 
-window.user = JSON.parse(localStorage.getItem('user'))
-window.waterwheel.oauth.tokenInformation = JSON.parse(localStorage.getItem('tokenInformation')) || window.waterwheel.oauth.tokenInformation;
-
 export const MatchWhenAuthorized = ({ component: Component, ...rest }) => (
   <Match {...rest} render={props => (
-    localStorage.getItem('tokenExpireTime') > new Date().getTime() ? (
+    window.waterwheel.oauth.tokenExpireTime > new Date().getTime() ? (
       <Component {...props}/>
     ) : (
       <Redirect to={{ pathname: '/login' }}/>
@@ -47,20 +44,16 @@ export class Main extends React.Component {
   }
 
   componentDidMount() {
-    if (window.waterwheel.oauth.tokenInformation.access_token) {
-      getInitialData(window.username)
-        .then(() => {
-          this.setState({loading: false})
-        })
-        .catch(e => {
-          window.waterwheel.oauth.tokenInformation.grant_type = 'password'
-          delete window.waterwheel.oauth.tokenInformation.access_token
-          delete window.waterwheel.oauth.tokenInformation.refresh_token
-          this.setState({loading: false})
-        })
-    } else {
-      this.setState({loading: false})
-    }
+    getInitialData()
+      .then(() => {
+        this.setState({loading: false})
+      })
+      .catch(e => {
+        window.waterwheel.oauth.tokenInformation.grant_type = 'password'
+        delete window.waterwheel.oauth.tokenInformation.access_token
+        delete window.waterwheel.oauth.tokenInformation.refresh_token
+        this.setState({loading: false})
+      })
   }
 
   render() {

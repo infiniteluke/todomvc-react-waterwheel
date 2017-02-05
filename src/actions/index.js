@@ -18,6 +18,15 @@ export const showMessage = (text, type, dispatch) => {
   }
 }
 
+export const handleError = (e, action, dispatch) => {
+  showMessage(
+    `You do not have access to ${action} this todo.`,
+    'error',
+    dispatch
+  )
+  return Promise.reject(e)
+}
+
 export const addTodo = text => (dispatch, getState) => {
   return window.waterwheel.jsonapi.post('node/todo', {
     data: { 'attributes': { 'title': text } }
@@ -26,11 +35,7 @@ export const addTodo = text => (dispatch, getState) => {
     dispatch({ type: types.ADD_TODO, todo: normalizeData(res.data) });
     showMessage('Todo saved succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'add', dispatch))
 }
 
 export const deleteTodo = id => (dispatch, getState) => {
@@ -39,11 +44,7 @@ export const deleteTodo = id => (dispatch, getState) => {
     dispatch ({ type: types.DELETE_TODO, id });
     showMessage('Todo deleted succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'delete', dispatch))
 }
 
 export const editTodo = (id, text) => (dispatch, getState) => {
@@ -58,11 +59,7 @@ export const editTodo = (id, text) => (dispatch, getState) => {
     dispatch({ type: types.EDIT_TODO, id, text });
     showMessage('Todo edited succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'edit', dispatch))
 }
 
 export const completeTodo = (id, text) => (dispatch, getState) => {
@@ -77,11 +74,7 @@ export const completeTodo = (id, text) => (dispatch, getState) => {
     dispatch({ type: types.COMPLETE_TODO, id })
     showMessage('Todo marked completed succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'complete', dispatch))
 }
 
 export const completeAll = () => (dispatch, getState) => {
@@ -100,11 +93,7 @@ export const completeAll = () => (dispatch, getState) => {
     dispatch({ type: types.COMPLETE_ALL })
     showMessage('All todos marked completed succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'complete', dispatch))
 }
 
 export const clearCompleted = () => (dispatch, getState) => {
@@ -117,11 +106,7 @@ export const clearCompleted = () => (dispatch, getState) => {
     dispatch({ type: types.CLEAR_COMPLETED })
     showMessage('All completed todos deleted succesfully.', 'success', dispatch);
   })
-  .catch(e => showMessage(
-    e.response ? e.response.data.message : e.message,
-    'error',
-    dispatch
-  ))
+  .catch(e => handleError(e, 'delete', dispatch))
 }
 
 export const likeTodo = (id) => (dispatch, getState) => {
@@ -138,21 +123,13 @@ export const likeTodo = (id) => (dispatch, getState) => {
       dispatch({ type: types.LIKE_TODO, todoId: todo.id, id: res.data.id, userLiked: res.data.relationships.uid.data.id });
       showMessage('Todo liked succesfully', 'success', dispatch);
     })
-    .catch(e => showMessage(
-      e.response ? e.response.data.message : e.message,
-      'error',
-      dispatch
-    ))
+    .catch(e => handleError(e, dispatch))
   } else {
     return window.waterwheel.jsonapi.delete('node/likes', like.id)
     .then(res => {
       dispatch({ type: types.UNLIKE_TODO, todoId: id, id: like.id });
       showMessage('Todo like removed succesfully.', 'success', dispatch);
     })
-    .catch(e => showMessage(
-      e.response ? e.response.data.message : e.message,
-      'error',
-      dispatch
-    ))
+    .catch(e => handleError(e, 'like', dispatch))
   }
 }

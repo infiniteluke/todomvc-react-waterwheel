@@ -7,7 +7,7 @@ const TODO_FILTERS = {
   [SHOW_ALL]: () => true,
   [SHOW_ACTIVE]: todo => !todo.completed,
   [SHOW_COMPLETED]: todo => todo.completed,
-  [SHOW_MINE]: todo => todo.userId === window.user.uuid
+  [SHOW_MINE]: todo => todo.userId === window.uid,
 }
 
 export default class MainSection extends Component {
