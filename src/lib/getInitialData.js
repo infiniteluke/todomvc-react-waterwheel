@@ -2,13 +2,14 @@ import normalizeData from './normalizeData';
 import relate from 'jsonapi-relate';
 
 export default () => {
-  return Promise.all([
-    window.waterwheel.jsonapi.get('node/todo', {
-      sort: '-changed',
-      include: 'uid'
-    }),
+  return window.waterwheel.jsonapi.get('node/todo', {
+    sort: '-changed',
+    include: 'uid'
+  })
+  .then(res => Promise.all([
+    res,
     window.waterwheel.jsonapi.get('node/likes', { include: 'uid' }),
-  ])
+  ]))
   .then(res => {
     window.uid = JSON.parse(atob(window.waterwheel.oauth.tokenInformation.access_token.split('.')[1])).sub;
     const todos = res[0];

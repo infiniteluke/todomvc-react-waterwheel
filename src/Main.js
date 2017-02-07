@@ -1,6 +1,5 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import '../node_modules/waterwheel/dist/waterwheel'
 import createStore from './lib/createStore'
 import getInitialData from './lib/getInitialData';
 import App from './containers/App'
@@ -12,7 +11,6 @@ import config from './config'
 import './Main.css';
 
 const { apiURL, client_id, client_secret } = config;
-
 window.waterwheel = new window.Waterwheel({
   base: apiURL,
   oauth: {
@@ -44,16 +42,21 @@ export class Main extends React.Component {
   }
 
   componentDidMount() {
-    getInitialData()
-      .then(() => {
-        this.setState({loading: false})
-      })
-      .catch(e => {
-        window.waterwheel.oauth.tokenInformation.grant_type = 'password'
-        delete window.waterwheel.oauth.tokenInformation.access_token
-        delete window.waterwheel.oauth.tokenInformation.refresh_token
-        this.setState({loading: false})
-      })
+    if (window.waterwheel.oauth.tokenInformation.access_token) {
+      getInitialData()
+        .then(() => {
+          this.setState({loading: false})
+        })
+        .catch(e => {
+          window.waterwheel.oauth.tokenInformation.grant_type = 'password'
+          delete window.waterwheel.oauth.tokenInformation.access_token
+          delete window.waterwheel.oauth.tokenInformation.refresh_token
+          this.setState({loading: false})
+        })
+    }
+    else {
+      this.setState({loading: false})
+    }
   }
 
   render() {
