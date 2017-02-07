@@ -72,7 +72,7 @@ export const completeTodo = (id, text) => (dispatch, getState) => {
   })
   .then(res => {
     dispatch({ type: types.COMPLETE_TODO, id })
-    showMessage('Todo marked completed succesfully.', 'success', dispatch);
+    showMessage(`Todo marked ${!completeToggle ? 'complete' : 'incomplete'} succesfully.`, 'success', dispatch);
   })
   .catch(e => handleError(e, 'complete', dispatch))
 }
