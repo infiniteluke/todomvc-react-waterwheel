@@ -4,7 +4,7 @@ import getInitialData from '../lib/getInitialData';
 
 export default class Login extends React.Component {
   state = {
-    redirect: localStorage.getItem('tokenExpireTime') > new Date().getTime()
+    redirect: window.waterwheel.oauth.tokenExpireTime > new Date().getTime()
   }
   
   handleChange = (e) => {
@@ -25,7 +25,6 @@ export default class Login extends React.Component {
       .catch((e) => {
         const message =  e.response ? e.response.data.message : e.message;
         this.setState({ message })
-        return Promise.reject(e)
       })
   }
 
@@ -38,7 +37,7 @@ export default class Login extends React.Component {
         {(
           <div>
             <div className='welcomeText'>
-              {localStorage.getItem('tokenExpireTime') > new Date().getTime() ? (
+              {window.waterwheel.oauth.tokenExpireTime > new Date().getTime() ? (
                 ''
               ) : (
                 <p>Please login with your 4k Waterwheel Training credentials.</p>
@@ -48,7 +47,7 @@ export default class Login extends React.Component {
               <input type='text' name='username' onChange={this.handleChange} placeholder='username' />
               <input type='password' name='password' onChange={this.handleChange} placeholder='password' />
               <input type='submit' value='Log in' />
-              {this.state.message ? <div className='message'><div className='messageText'>{this.state.message}</div></div> : ''}
+              {this.state.message ? <div className='loginMessage'><div className='messageText'>{this.state.message}</div></div> : ''}
             </form>
           </div>
         )}
