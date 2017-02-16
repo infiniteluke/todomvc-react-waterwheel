@@ -115,8 +115,8 @@ export const likeTodo = (id) => (dispatch, getState) => {
   if (!todo.userLiked) {
     return window.waterwheel.jsonapi.post('node/likes', {
       data: {
-        'attributes': { 'title': `Like for ${todo.id}` },
-        'relationships': { 'field_todo': { data: { id, type: 'node--todo' } } }
+        attributes: { title: `Like for ${todo.id}` },
+        relationships: { field_todo: { data: { id, type: 'node--todo' } } }
       }
     })
     .then(res => {

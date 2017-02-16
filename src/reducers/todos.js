@@ -34,13 +34,13 @@ export default function todos(state = [], action) {
           todo
       )
 
-      case UNLIKE_TODO:
-        return state.map(todo => {
-          const likeIndex = todo.likes.findIndex(like => like.id === action.id)
-          return todo.id === action.todoId ?
-            { ...todo, userLiked: '', likes: todo.likes.slice(0,likeIndex).concat(todo.likes.slice(likeIndex+1)) } :
-            todo
-        })
+    case UNLIKE_TODO:
+      return state.map(todo => {
+        const likeIndex = todo.likes.findIndex(like => like.id === action.id)
+        return todo.id === action.todoId ?
+          { ...todo, userLiked: '', likes: todo.likes.slice(0,likeIndex).concat(todo.likes.slice(likeIndex+1)) } :
+          todo
+      })
 
     case COMPLETE_ALL:
       const areAllMarked = state.every(todo => todo.completed)
