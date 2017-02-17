@@ -13,6 +13,7 @@ import './Main.css';
 const { apiURL, client_id, client_secret } = config;
 window.waterwheel = new window.Waterwheel({
   base: apiURL,
+  timeout: 10000,
   oauth: {
    grant_type: 'password',
    client_id: client_id,
